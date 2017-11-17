@@ -12,6 +12,7 @@ A concise DSL to perform common image processing tasks in Kotlin
 * Excellent tooling, interactive REPL and IDE support
 * Extension methods only, no new types
 * Sensible default parameters where possible
+* Immutable (for now)
 * Ready for jupyter
 
 ## Examples
@@ -45,10 +46,13 @@ val blobs = openImage<FloatType>("images/blobs32.tif")
 image.dim()
 
 // misc operators to transform images
-image.gauss()
 
 // default parameters which are also named parameters
-image.median(listOf(10f,10f), shape = Shape.disk)
+val medianImage = image.median(listOf(10f,10f), shape = Shape.disk)
+
+// method chaining
+image.gauss().show()
+image.gauss().median().apply{ save("some.png") }.show()
 
 ```
 
