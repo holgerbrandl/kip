@@ -1,6 +1,6 @@
 package de.mpicbg.scicomp.kip
 
-import invizio.cip.parameters.Format
+import de.mpicbg.scicomp.kip.misc.Format
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.algorithm.stats.ComputeMinMax
 import net.imglib2.img.Img
@@ -22,7 +22,7 @@ fun <T> RandomAccessibleInterval<T>.gauss(
 ): Img<T> where T : RealType<T>, T : NativeType<T> {
 
     val bmConfig = adjustBoundary(boundaryMethod)
-    val outOfBoundFactory = Format.outOfBoundFactory(bmConfig.bm.toString(), bmConfig.value)
+    val outOfBoundFactory = Format.outOfBoundFactory(bmConfig.bm, bmConfig.value)
 
     val imgFactory = Util.getArrayOrCellImgFactory(this, FloatType(0f))
     val outputImage = imgFactory.create(this, FloatType(0f))

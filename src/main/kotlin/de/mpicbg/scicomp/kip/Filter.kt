@@ -1,6 +1,6 @@
 package de.mpicbg.scicomp.kip
 
-import invizio.cip.parameters.Format
+import de.mpicbg.scicomp.kip.misc.Format
 import net.imagej.ops.Ops
 import net.imagej.ops.special.computer.Computers
 import net.imagej.ops.special.computer.UnaryComputerOp
@@ -56,7 +56,7 @@ fun <T> RandomAccessibleInterval<T>.median(
     }
 
     val bmConfig = this.adjustBoundary(boundaryMethod)
-    val outOfBoundFactory = Format.outOfBoundFactory(bmConfig.bm.toString(), bmConfig.value)
+    val outOfBoundFactory = Format.outOfBoundFactory(bmConfig.bm, bmConfig.value)
 
 
     ///////////////////////////////////////////////////////////////////////

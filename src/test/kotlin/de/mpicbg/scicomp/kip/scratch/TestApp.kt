@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     val bubbles = bubbles()
     //    ImageJFunctions.show(bubbles, "")
 
-    //    bubbles.show()
+    bubbles.show()
 
     val avg: Img<BitType> = bubbles.median(listOf(10f, 10f))
 
