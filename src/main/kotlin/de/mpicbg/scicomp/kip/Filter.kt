@@ -2,6 +2,7 @@ package de.mpicbg.scicomp.kip
 
 import de.mpicbg.scicomp.kip.misc.Format
 import net.imagej.ops.Ops
+import net.imagej.ops.special.computer.AbstractUnaryComputerOp
 import net.imagej.ops.special.computer.Computers
 import net.imagej.ops.special.computer.UnaryComputerOp
 import net.imglib2.RandomAccessibleInterval
@@ -10,6 +11,8 @@ import net.imglib2.algorithm.neighborhood.HyperSphereShape
 import net.imglib2.img.Img
 import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.real.FloatType
+import net.imglib2.util.Util
 import net.imglib2.view.Views
 
 /**
@@ -17,7 +20,63 @@ import net.imglib2.view.Views
  */
 
 
+internal class InvertComputationCIP<T : RealType<T>>(maxT: T, minT: T) : AbstractUnaryComputerOp<T, T>() {
+    internal val max: Double
+    internal val min: Double
+
+
+    init {
+        max = maxT.realDouble
+        min = minT.realDouble
+    }
+
+
+    override fun compute(input: T, output: T) {
+        output.setReal(max + min - input.realDouble)
+    }
+}
+
+fun <T> RandomAccessibleInterval<T>.invert(): RandomAccessibleInterval<T> where T : RealType<T>, T : NativeType<T> {
+    val inputImage = this
+    val minMax = calcMinMax()
+
+    val mapper = InvertComputationCIP<T>(minMax.min, minMax.max)
+
+    val inputIter = Views.iterable<T>(inputImage)
+    val outputImage: RandomAccessibleInterval<T> = opService.create().img(inputImage)
+    return opService.map(
+        outputImage,
+        inputIter,
+        mapper
+    )
+}
+
+
+// http://imagej.net/ImgLib2_Examples#Example_1b_-_Opening_an_ImgLib2_image
+
+/**
+ * @param radius radius is assumed to in the same unit as pixelSize
+ */
+fun <T> RandomAccessibleInterval<T>.gauss(
+    //    inputImage: RandomAccessibleInterval<T>,
+    radius: List<Float> = listOf(10f, 10f),
+    boundaryMethod: BoundaryMethod = BoundaryMethod.mirror,
+    pixRadius: DoubleArray = calcPixelRadius(numDimensions(), radius, ONE_PIXEL(numDimensions()))
+): Img<T> where T : RealType<T>, T : NativeType<T> {
+
+    val bmConfig = adjustBoundary(boundaryMethod)
+    val outOfBoundFactory = Format.outOfBoundFactory(bmConfig.bm, bmConfig.value)
+
+    val imgFactory = Util.getArrayOrCellImgFactory(this, FloatType(0f))
+    val outputImage = imgFactory.create(this, FloatType(0f))
+
+    // @OpService ops
+    return opService.filter().gauss(outputImage, this, pixRadius, outOfBoundFactory) as Img<T>
+}
+
+
 enum class Shape { disk, rectangle }
+
 
 /**
  * @param radius  is assumed to in the same unit as pixelSize
@@ -62,6 +121,8 @@ fun <T> RandomAccessibleInterval<T>.median(
     ///////////////////////////////////////////////////////////////////////
     // process the input image
     ///////////////////////////////////////////////////////////////////////
+
+    // todo why not just opService.filter().median() ??
 
     val outputImage = opService.create().img(inputImage)
     //Iterable<T> outputIter = Views.flatIterable(outputImage);

@@ -54,7 +54,42 @@ val medianImage = image.median(listOf(10f,10f), shape = Shape.disk)
 image.gauss().show()
 image.gauss().median().apply{ save("some.png") }.show()
 
+
+// segmentation & labeling
+ val labelImage = bubbles()
+    .gauss(listOf(10f))
+    .showThen()
+    .threshold(0.3f)
+    .invert()
+    .showThen()
+    .label()
+
+labelImage.show()
+
 ```
+
+## Methods
+
+Filters
+* [X] Median Filter
+* [X] Gauss Filter
+* [X] Inversion
+
+Segmentation
+* [X] Threshold
+* [X] Labeling
+
+
+Still missing but on our list (drop us a ticket if needed)
+* Morphologial Ops (Erode, Dilate, Open, Close)
+* Projections
+* Scalar Arithmetics
+* Slicing
+* Watershed
+* TopHat Filter
+
+Meanwhile you can for sure mix `ops` or `imglib2` api directly
+
 
 ## Next steps
 

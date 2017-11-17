@@ -48,6 +48,8 @@ class KipTests {
         //        LegacyInjector.preinit();
         val avg: Img<BitType> = bubbles().median(listOf(10f, 10f))
 
+
+
         avg.show()
     }
 }

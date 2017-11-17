@@ -23,27 +23,17 @@ import javax.imageio.ImageIO
  */
 
 
-//val myIJ by lazy { ij.ImageJ() }
-@Deprecated("should not used/needed in a programmatic way")
-val myIJ by lazy {
-    //    LegacyInjector.preinit();
-    //    ImageJ().apply {
-    //        ui().showUI()
-    //    }
-}
-
 
 val opService: OpService by lazy {
-    //    get() = Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
-
     Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
 }
 
-//object Init{
-//    init {
-//        System.setProperty("java.awt.headless", "false")
-//    }
-//}
+
+fun <T : NumericType<T>> RandomAccessibleInterval<T>.showThen(): RandomAccessibleInterval<T> {
+    show()
+    return this
+}
+
 
 fun <T : NumericType<T>> RandomAccessibleInterval<T>.show() {
     val isJupyter = false // so how to we detect that?
@@ -73,6 +63,7 @@ fun <T> RandomAccessibleInterval<T>.asBufferedImage(): BufferedImage? where T : 
     return imagePlus.getBufferedImage()
 }
 
+
 fun <T> openImage(path: String): Img<T> where T : RealType<T>, T : NativeType<T> {
     // create the ImgOpener
     //    val imgOpener = ImgOpener()
@@ -82,6 +73,17 @@ fun <T> openImage(path: String): Img<T> where T : RealType<T>, T : NativeType<T>
     // should open as an ArrayImg.
     //    return imgOpener.openImg(path) as Img<T>
     return net.imglib2.img.ImagePlusAdapter.wrapImgPlus<T>(ij.io.Opener().openImage(path))
+}
+
+
+inline fun <reified T : RealType<T>?> Img<T>.save(fileName: String): Boolean {
+    val converted = when {
+        randomAccess().get() is BitType -> ImageJFunctions.wrapBit(this, "foo")
+        randomAccess().get() is FloatType -> ImageJFunctions.wrapFloat(this, "foo")
+        else -> TODO("image type not yet supported")
+    }
+
+    return FileSaver(converted).saveAsPng(fileName)
 }
 
 
@@ -96,16 +98,6 @@ fun fromMatrix(data: Array<Int>, vararg dims: Int) {
     ArrayImgs.ints(data.toIntArray(), *dims.map(Int::toLong).toLongArray())
 }
 
-
-inline fun <reified T : RealType<T>?> Img<T>.save(fileName: String): Boolean {
-    val converted = when {
-        randomAccess().get() is BitType -> ImageJFunctions.wrapBit(this, "foo")
-        randomAccess().get() is FloatType -> ImageJFunctions.wrapFloat(this, "foo")
-        else -> TODO("image type not yet supported")
-    }
-
-    return FileSaver(converted).saveAsPng(fileName)
-}
 
 fun <T : NumericType<T>?> Img<T>.toFloat(): Img<FloatType> {
     opService
