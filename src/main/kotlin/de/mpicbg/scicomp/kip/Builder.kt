@@ -1,37 +1,20 @@
 package de.mpicbg.scicomp.kip
 
 import de.mpicbg.scicomp.kip.misc.ImageUtils.noiseImage
-import ij.io.FileSaver
 import net.imglib2.exception.IncompatibleTypeException
 import net.imglib2.img.Img
-import net.imglib2.img.display.imagej.ImageJFunctions
 import net.imglib2.type.logic.BitType
-import net.imglib2.type.numeric.NumericType
-import net.imglib2.type.numeric.RealType
-import net.imglib2.type.numeric.real.FloatType
 
 /**
  * @author Holger Brandl
  */
 
 
-fun <T : NumericType<T>> Img<T>.show() {
-    // see https://youtrack.jetbrains.com/issue/KT-18181
-    System.setProperty("java.awt.headless", "false")
+/*
+* Generators
+ */
 
-    ImageJFunctions.show(this, "test")
-}
-
-
-inline fun <reified T : RealType<T>?> Img<T>.save(fileName: String): Boolean {
-    val converted = when {
-        randomAccess().get() is BitType -> ImageJFunctions.wrapBit(this, "foo")
-        randomAccess().get() is FloatType -> ImageJFunctions.wrapFloat(this, "foo")
-        else -> TODO("image type not yet supported")
-    }
-
-    return FileSaver(converted).saveAsPng(fileName)
-}
+fun bubbles(width: Int = 500, height: Int = 500, cutoff: Int = 129) = bubbles(intArrayOf(width, height), cutoff)
 
 fun bubbles(dims: IntArray = intArrayOf(500, 500), cutoff: Int = 129): Img<BitType> {
     // old IJ API

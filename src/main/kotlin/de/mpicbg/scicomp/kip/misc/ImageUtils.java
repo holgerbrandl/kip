@@ -12,7 +12,7 @@ import net.imglib2.type.numeric.RealType;
 
 import java.util.Random;
 
-import static de.mpicbg.scicomp.kip.KipDSLKt.bubbles;
+import static de.mpicbg.scicomp.kip.BuilderKt.bubbles;
 
 /**
  * @author Holger Brandl
