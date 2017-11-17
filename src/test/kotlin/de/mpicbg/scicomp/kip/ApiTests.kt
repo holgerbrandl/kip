@@ -3,12 +3,17 @@ package de.mpicbg.scicomp.kip
 import net.imglib2.type.numeric.real.FloatType
 import org.junit.Test
 
-/**
- * @author Holger Brandl
- */
-
 
 class KipTests {
+
+    //    companion object {
+    //
+    //        @BeforeClass
+    //        @JvmStatic
+    //        fun setup() {
+    //            opsService.info
+    //        }
+    //    }
 
     @Test
     fun loadProccesSave() {
@@ -20,25 +25,19 @@ class KipTests {
             0, 0, 0, 0, 0
         ).asImage(5, 5)
 
-        //        image.
 
     }
 
     @Test
     fun loadImageFromFile() {
         val image = openImage<FloatType>("images/mitosis_t1.tif")
-        image.gauss()
+        println(image.dim())
     }
 
     @Test
     fun blurTest() {
-        //                System.setProperty("java.awt.headless", "false")
         //        LegacyInjector.preinit();
-
-
         val blurred = bubbles().toFloat().gauss()
         blurred.show()
-
     }
-
 }

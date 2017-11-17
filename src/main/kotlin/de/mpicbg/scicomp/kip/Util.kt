@@ -14,6 +14,10 @@ import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.real.FloatType
 import org.scijava.Context
 import org.scijava.console.ConsoleService
+import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
+import java.util.*
+import javax.imageio.ImageIO
 
 /**
  * @author Holger Brandl
@@ -30,18 +34,43 @@ val myIJ by lazy {
 }
 
 
-val opsService by lazy {
-    val ctx = Context(OpService::class.java, ConsoleService::class.java)
-    ctx.getService(OpService::class.java)
-}
+val opsService: OpService
+    //    get() = Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
+    get() = Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
+
+//object Init{
+//    init {
+//        System.setProperty("java.awt.headless", "false")
+//    }
+//}
 
 fun <T : NumericType<T>> Img<T>.show() {
     // see https://youtrack.jetbrains.com/issue/KT-18181
     System.setProperty("java.awt.headless", "false")
 
-    ImageJFunctions.show(this, "test")
+    val isJupyter = false // so how to we detect that?
+
+    if (isJupyter) {
+        val bufferedImage = asBufferedImage()
+        val buf = ByteArrayOutputStream()
+
+        val writer = ImageIO.getImageWritersByMIMEType("image/jpeg").next()
+
+        val ios = ImageIO.createImageOutputStream(buf)
+        writer.output = ios
+        writer.write(bufferedImage)
+        ios.close()
+        val b64img = Base64.getEncoder().encodeToString(buf.toByteArray())
+        JupyterUtil.resultOf("image/jpeg" to b64img)
+    } else {
+        ImageJFunctions.show(this, "")
+    }
 }
 
+fun <T> Img<T>.asBufferedImage(): BufferedImage? where T : NumericType<T> {
+    val imagePlus = ImageJFunctions.wrap<T>(this, "")
+    return imagePlus.getBufferedImage()
+}
 
 fun <T> openImage(path: String): Img<T> where T : RealType<T>, T : NativeType<T> {
     // create the ImgOpener
@@ -77,4 +106,21 @@ inline fun <reified T : RealType<T>?> Img<T>.save(fileName: String): Boolean {
     return FileSaver(converted).saveAsPng(fileName)
 }
 
-fun <T : NumericType<T>?> Img<T>.toFloat() = ImageJFunctions.wrap<FloatType>(ImageJFunctions.wrap(this, "foo"))
+fun <T : NumericType<T>?> Img<T>.toFloat(): Img<FloatType> {
+    opsService
+    return ImageJFunctions.wrap<FloatType>(ImageJFunctions.wrap(this, "foo"))
+}
+
+
+// convenience accessors
+fun <T> Img<T>.dim() = LongArray(numDimensions(), { 0 }).apply { dimensions(this) }
+
+
+fun pckgFun() = println("i'm sitting on root!")
+
+//class Foo{
+//    companion object{
+//        fun hello() = println("hello from in here")
+//
+//    }
+//}
