@@ -7,7 +7,7 @@ import org.scijava.console.ConsoleService
 
 val image = bubbles()
 
-opsService
+opService
 pckgFun()
 
 

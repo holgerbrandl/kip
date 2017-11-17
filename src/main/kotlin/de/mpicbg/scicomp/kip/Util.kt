@@ -4,6 +4,7 @@ import ij.io.FileSaver
 import net.imagej.ImageJ
 import net.imagej.ops.OpService
 import net.imagej.patcher.LegacyInjector
+import net.imglib2.RandomAccessibleInterval
 import net.imglib2.img.Img
 import net.imglib2.img.array.ArrayImgs
 import net.imglib2.img.display.imagej.ImageJFunctions
@@ -34,9 +35,11 @@ val myIJ by lazy {
 }
 
 
-val opsService: OpService
+val opService: OpService by lazy {
     //    get() = Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
-    get() = Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
+
+    Context(OpService::class.java, ConsoleService::class.java).getService(OpService::class.java)
+}
 
 //object Init{
 //    init {
@@ -44,9 +47,9 @@ val opsService: OpService
 //    }
 //}
 
-fun <T : NumericType<T>> Img<T>.show() {
+fun <T : NumericType<T>> RandomAccessibleInterval<T>.show() {
     // see https://youtrack.jetbrains.com/issue/KT-18181
-    System.setProperty("java.awt.headless", "false")
+    //    System.setProperty("java.awt.headless", "false")
 
     val isJupyter = false // so how to we detect that?
 
@@ -67,7 +70,7 @@ fun <T : NumericType<T>> Img<T>.show() {
     }
 }
 
-fun <T> Img<T>.asBufferedImage(): BufferedImage? where T : NumericType<T> {
+fun <T> RandomAccessibleInterval<T>.asBufferedImage(): BufferedImage? where T : NumericType<T> {
     val imagePlus = ImageJFunctions.wrap<T>(this, "")
     return imagePlus.getBufferedImage()
 }
@@ -107,20 +110,18 @@ inline fun <reified T : RealType<T>?> Img<T>.save(fileName: String): Boolean {
 }
 
 fun <T : NumericType<T>?> Img<T>.toFloat(): Img<FloatType> {
-    opsService
+    opService
     return ImageJFunctions.wrap<FloatType>(ImageJFunctions.wrap(this, "foo"))
 }
 
 
+//todo use two types here and do internal conversion
+// use core method for all arithmetics
+
+
 // convenience accessors
-fun <T> Img<T>.dim() = LongArray(numDimensions(), { 0 }).apply { dimensions(this) }
+fun <T> RandomAccessibleInterval<T>.dim() = LongArray(numDimensions(), { 0 }).apply { dimensions(this) }
 
 
 fun pckgFun() = println("i'm sitting on root!")
 
-//class Foo{
-//    companion object{
-//        fun hello() = println("hello from in here")
-//
-//    }
-//}

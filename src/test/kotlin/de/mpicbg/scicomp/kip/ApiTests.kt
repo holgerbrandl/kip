@@ -1,5 +1,7 @@
 package de.mpicbg.scicomp.kip
 
+import net.imglib2.img.Img
+import net.imglib2.type.logic.BitType
 import net.imglib2.type.numeric.real.FloatType
 import org.junit.Test
 
@@ -11,7 +13,7 @@ class KipTests {
     //        @BeforeClass
     //        @JvmStatic
     //        fun setup() {
-    //            opsService.info
+    //            opService.info
     //        }
     //    }
 
@@ -39,5 +41,13 @@ class KipTests {
         //        LegacyInjector.preinit();
         val blurred = bubbles().toFloat().gauss()
         blurred.show()
+    }
+
+    @Test
+    fun medianTest() {
+        //        LegacyInjector.preinit();
+        val avg: Img<BitType> = bubbles().median(listOf(10f, 10f))
+
+        avg.show()
     }
 }
