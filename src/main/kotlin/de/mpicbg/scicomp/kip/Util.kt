@@ -1,9 +1,7 @@
 package de.mpicbg.scicomp.kip
 
 import ij.io.FileSaver
-import net.imagej.ImageJ
 import net.imagej.ops.OpService
-import net.imagej.patcher.LegacyInjector
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.img.Img
 import net.imglib2.img.array.ArrayImgs
@@ -28,10 +26,10 @@ import javax.imageio.ImageIO
 //val myIJ by lazy { ij.ImageJ() }
 @Deprecated("should not used/needed in a programmatic way")
 val myIJ by lazy {
-    LegacyInjector.preinit();
-    ImageJ().apply {
-        ui().showUI()
-    }
+    //    LegacyInjector.preinit();
+    //    ImageJ().apply {
+    //        ui().showUI()
+    //    }
 }
 
 
@@ -48,9 +46,6 @@ val opService: OpService by lazy {
 //}
 
 fun <T : NumericType<T>> RandomAccessibleInterval<T>.show() {
-    // see https://youtrack.jetbrains.com/issue/KT-18181
-    //    System.setProperty("java.awt.headless", "false")
-
     val isJupyter = false // so how to we detect that?
 
     if (isJupyter) {
@@ -66,6 +61,9 @@ fun <T : NumericType<T>> RandomAccessibleInterval<T>.show() {
         val b64img = Base64.getEncoder().encodeToString(buf.toByteArray())
         JupyterUtil.resultOf("image/jpeg" to b64img)
     } else {
+        // see https://youtrack.jetbrains.com/issue/KT-18181
+        System.setProperty("java.awt.headless", "false")
+
         ImageJFunctions.show(this, "")
     }
 }

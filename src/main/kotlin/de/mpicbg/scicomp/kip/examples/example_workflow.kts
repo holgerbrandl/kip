@@ -9,7 +9,7 @@ val other = bubbles()
 val imageDiff = image + other
 val imageProp = image / other
 
-// number arithmethics
+// number arithmetics
 val imageDiff = image - 3
 
 // display as usual
@@ -20,7 +20,7 @@ image.save("my_image.png")
 
 // open from file
 val blobs = openImage<FloatType>("images/blobs32.tif")
-//val image2 = openImage<FloatType>("/Users/brandl/projects/kotlin/kip/images/blobs32.tif")
+//val blobs = openImage<FloatType>("/Users/brandl/projects/kotlin/kip/images/blobs32.tif")
 
 // little helpers to ease some of the API pain
 image.dim()

@@ -1,6 +1,7 @@
 package de.mpicbg.scicomp
 
-import net.imagej.ImageJ
+import ij.ImageJ
+
 
 /**
  * @author Holger Brandl
@@ -8,7 +9,7 @@ import net.imagej.ImageJ
 
 fun main(args: Array<String>) {
     val ij = ImageJ()
-    ij.ui().showUI()
+    //    ij.ui.showUI()
 
     println("foo")
 }
