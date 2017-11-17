@@ -9,6 +9,7 @@ A concise DSL to perform common image processing tasks in Kotlin
 
 * Fully typed method signatures
 * Concise and easy to read
+* Excellent tooling, interactive REPL and IDE support
 * Extension methods only, no new types
 * Sensible default parameters where possible
 * Ready for jupyter
@@ -54,4 +55,12 @@ image.median(listOf(10f,10f), shape = Shape.disk)
 ## Next steps
 
 * [ ] Add remaing operators from CIP
+* [ ] Provide kscript and jupyter example notebooks
 * [ ] port some examples from [here](imagej-scripting/0.6.0/imagej-scripting-0.6.0.jar!/script_templates/Tutorials) to `kip`
+
+
+## Acknowledgments
+
+We stole all bits and pieces from [CIP](https://github.com/benoitlo/CIP)
+
+Also thanks to the imglib2 gitter community.
