@@ -1,7 +1,7 @@
 # kip - Common {i}mage {p}rocessing with {K}otlin
 
 
-A concise DSL to perform common image processing tasks in Kotlin
+A concise DSL to perform common image processing tasks using Kotlin
 
 ![](.README_images/b0faf8b6.png)
 
