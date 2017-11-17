@@ -3,6 +3,8 @@
 
 A concise DSL to perform common image processing tasks in Kotlin
 
+![](.README_images/b0faf8b6.png)
+
 ## Features
 
 * Fully typed method signatures
