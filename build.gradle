@@ -35,8 +35,13 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile "de.mpicbg.scicomp:krangl:0.7-SNAPSHOT"
+    // suggest in  gitter to workaround ops issues
+    compile "net.imagej:ij1-patcher:0.12.7"
+    compile group: 'org.scijava', name: 'scijava-common', version: '2.66.1'
+
     compile 'invizio:CIP:0.1.0'
+
+    compile "de.mpicbg.scicomp:krangl:0.7-SNAPSHOT"
 
 
     testCompile group: 'junit', name: 'junit', version: '4.11'

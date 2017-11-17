@@ -72,7 +72,7 @@ fun <T> Img<T>.gauss(
 
 
     // @OpService ops
-    return ij.op().filter().gauss(outputImage, this, pixRadius, outOfBoundFactory) as Img<T>
+    return opsService.filter().gauss(outputImage, this, pixRadius, outOfBoundFactory) as Img<T>
 }
 
 enum class BoundaryMethod {

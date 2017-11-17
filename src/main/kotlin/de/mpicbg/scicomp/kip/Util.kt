@@ -1,23 +1,39 @@
 package de.mpicbg.scicomp.kip
 
 import ij.io.FileSaver
-import io.scif.img.ImgOpener
 import net.imagej.ImageJ
+import net.imagej.ops.OpService
+import net.imagej.patcher.LegacyInjector
 import net.imglib2.img.Img
 import net.imglib2.img.array.ArrayImgs
 import net.imglib2.img.display.imagej.ImageJFunctions
+import net.imglib2.type.NativeType
 import net.imglib2.type.logic.BitType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.real.FloatType
+import org.scijava.Context
+import org.scijava.console.ConsoleService
 
 /**
  * @author Holger Brandl
  */
 
 
-val ij = ImageJ()
+//val myIJ by lazy { ij.ImageJ() }
+@Deprecated("should not used/needed in a programmatic way")
+val myIJ by lazy {
+    LegacyInjector.preinit();
+    ImageJ().apply {
+        ui().showUI()
+    }
+}
 
+
+val opsService by lazy {
+    val ctx = Context(OpService::class.java, ConsoleService::class.java)
+    ctx.getService(OpService::class.java)
+}
 
 fun <T : NumericType<T>> Img<T>.show() {
     // see https://youtrack.jetbrains.com/issue/KT-18181
@@ -27,15 +43,15 @@ fun <T : NumericType<T>> Img<T>.show() {
 }
 
 
-fun <T> openImage(path: String): Img<T> {
+fun <T> openImage(path: String): Img<T> where T : RealType<T>, T : NativeType<T> {
     // create the ImgOpener
-    val imgOpener = ImgOpener()
+    //    val imgOpener = ImgOpener()
 
     // open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
     // automatically determined. For a small image that fits in memory, this
     // should open as an ArrayImg.
-    return imgOpener.openImg(path) as Img<T>
-
+    //    return imgOpener.openImg(path) as Img<T>
+    return net.imglib2.img.ImagePlusAdapter.wrapImgPlus<T>(ij.io.Opener().openImage(path))
 }
 
 
