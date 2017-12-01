@@ -59,9 +59,10 @@ fun <T> RandomAccessibleInterval<T>.invert(): RandomAccessibleInterval<T> where 
  */
 fun <T> RandomAccessibleInterval<T>.gauss(
     //    inputImage: RandomAccessibleInterval<T>,
-    radius: List<Float> = listOf(10f, 10f),
+    radius: Int = 10,
+    radiusByDim: List<Float> = FloatArray(dim().size) { radius.toFloat() }.toList(),
     boundaryMethod: BoundaryMethod = BoundaryMethod.mirror,
-    pixRadius: DoubleArray = calcPixelRadius(numDimensions(), radius, ONE_PIXEL(numDimensions()))
+    pixRadius: DoubleArray = calcPixelRadius(numDimensions(), radiusByDim, ONE_PIXEL(numDimensions()))
 ): Img<T> where T : RealType<T>, T : NativeType<T> {
 
     val bmConfig = adjustBoundary(boundaryMethod)

@@ -23,29 +23,31 @@ fun <T> RandomAccessibleInterval<T>.threshold(
 }
 
 
+//data class LabeledImage<T : IntegerType<T>?>(val labelImage: RandomAccessibleInterval<T>, val labeling: ImgLabeling<Int, T>)
+
 fun <T> RandomAccessibleInterval<T>.label(
     threshold: Float = 0.5f  // if the image is logic value will translate to 0, 1
-): RandomAccessibleInterval<T> where T : IntegerType<T>, T : RealType<T>, T : NativeType<T> {
+): ImgLabeling<Int, T> where T : IntegerType<T>, T : RealType<T>, T : NativeType<T> {
 
     //    val labeler = RleCCL<T>(this, threshold)
     val outputImage: RandomAccessibleInterval<T> = opService.create().img(this)
     val labeling: ImgLabeling<Int, T> = opService.labeling().cca(this, ConnectedComponents.StructuringElement.EIGHT_CONNECTED)
 
+    labeling.mapping.labelsAtIndex(1)
 
-    return labeling.indexImg
-
+    return labeling
 }
 
 
 fun main(args: Array<String>) {
 
     val labelImage = bubbles()
-        .gauss(listOf(10f))
+        .gauss(10)
         .showThen()
         .threshold(0.3f)
         .invert()
         .showThen()
         .label()
 
-    labelImage.show()
+    labelImage.indexImg.show()
 }

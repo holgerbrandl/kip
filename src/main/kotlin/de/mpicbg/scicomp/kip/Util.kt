@@ -35,7 +35,7 @@ fun <T : NumericType<T>> RandomAccessibleInterval<T>.showThen(): RandomAccessibl
 }
 
 
-fun <T : NumericType<T>> RandomAccessibleInterval<T>.show() {
+fun <T : NumericType<T>> RandomAccessibleInterval<T>.show(title: String = "") {
     val isJupyter = false // so how to we detect that?
 
     if (isJupyter) {
@@ -54,7 +54,7 @@ fun <T : NumericType<T>> RandomAccessibleInterval<T>.show() {
         // see https://youtrack.jetbrains.com/issue/KT-18181
         System.setProperty("java.awt.headless", "false")
 
-        ImageJFunctions.show(this, "")
+        ImageJFunctions.show(this, title)
     }
 }
 
@@ -115,3 +115,9 @@ fun <T> RandomAccessibleInterval<T>.dim() = LongArray(numDimensions(), { 0 }).ap
 
 fun pckgFun() = println("i'm sitting on root!")
 
+//can not work because extensions compile into static dispatch
+//fun <T : NumericType<T>> RandomAccessibleInterval<T>.toString(): String {
+//    println("showing image")
+//    show()
+//    return this.toString()
+//}

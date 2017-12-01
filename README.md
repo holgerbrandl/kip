@@ -57,7 +57,7 @@ image.gauss().median().apply{ save("some.png") }.show()
 
 // segmentation & labeling
  val labelImage = bubbles()
-    .gauss(listOf(10f))
+    .gauss(10)
     .showThen()
     .threshold(0.3f)
     .invert()
