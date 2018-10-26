@@ -1,7 +1,8 @@
 package de.mpicbg.scicomp.kip.examples
 
-import com.github.holgerbrandl.kravis.histogram
 import de.mpicbg.scicomp.kip.*
+import kravis.geomHistogram
+import kravis.plot
 import net.imglib2.roi.labeling.LabelRegions
 import net.imglib2.type.logic.BitType
 
@@ -20,6 +21,7 @@ val net.imglib2.roi.labeling.ImgLabeling<Int, BitType>.regionSizes: List<RegionS
 
 fun main(args: Array<String>) {
 
+
     bubbles().invert().label().indexImg.show("labeled bubbles")
     val image = bubbles().invert()
 
@@ -28,7 +30,8 @@ fun main(args: Array<String>) {
     //val traceCells = image.trackCells(sensitivity = 0.4)
     val labeling = image.label()
     labeling.indexImg.show()
-    image.dim()
+
+    bubbles(cutoff = 3).gauss(radius = 23).label()
 
     val sizes = with(LabelRegions(labeling)) {
         existingLabels.map { getLabelRegion(it).size() }
@@ -42,6 +45,6 @@ fun main(args: Array<String>) {
     //    }.render()
 
 
-    labeling.regionSizes.histogram { numPixels }.render()
+    labeling.regionSizes.plot(x = { numPixels }).geomHistogram()
 
 }

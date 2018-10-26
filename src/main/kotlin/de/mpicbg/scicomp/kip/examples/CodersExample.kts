@@ -4,10 +4,9 @@
 @file:DependsOn("de.mpicbg.scicomp.experimental:kip:0.1-SNAPSHOT")
 
 
-import com.github.holgerbrandl.kravis.spec.Aggregate
-import com.github.holgerbrandl.kravis.spec.EncodingChannel
-import com.github.holgerbrandl.kravis.spec.plotOf
 import de.mpicbg.scicomp.kip.*
+import kravis.geomHistogram
+import kravis.plot
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.roi.labeling.ImgLabeling
 
@@ -54,9 +53,7 @@ val ImgLabeling<*, *>.regionSizes: List<RegionSize>
 
     }
 //
-plotOf(labeling.regionSizes) {
-    encoding(EncodingChannel.x, aggregate = Aggregate.count) { it.numPixels }
-}.render()
+labeling.regionSizes.plot(x = { it.numPixels }).geomHistogram()
 
 
 // misc

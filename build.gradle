@@ -8,8 +8,7 @@ apply plugin: 'org.jetbrains.dokka'
 
 
 buildscript {
-    ext.kotlin_version = '1.2.0'
-//    ext.kotlin_version = '1.2.0-rc-39'
+    ext.kotlin_version = '1.2.70'
 
     repositories {
 //        maven { url 'https://dl.bintray.com/kotlin/kotlin-dev' }
@@ -46,6 +45,7 @@ repositories {
 
     maven { url 'http://maven.imagej.net'}
     maven { url 'http://maven.imagej.net/content/repositories/releases/' }
+    maven { url 'http://maven.imagej.net/content/repositories/public/' }
 }
 
 
@@ -60,20 +60,24 @@ dependencies {
 
     compile group: 'org.scijava', name: 'scijava-common', version: '2.66.1'
     compile 'net.imglib2:imglib2:4.6.0'
-    compile 'net.imglib2:imglib2-ij:2.0.0-beta-38'
-    compile 'net.imagej:imagej-ops:0.38.0'
-    compile 'net.imagej:imagej-common:0.24.9'
-    compile 'io.scif:scifio:0.33.0'
+    compile 'net.imglib2:imglib2-ij:2.0.0-beta-43'
+    compile 'net.imagej:imagej-ops:0.43.0'
+    compile 'net.imagej:imagej-common:0.26.0'
+    compile 'io.scif:scifio:0.37.3'
 
-    compile "de.mpicbg.scicomp:krangl:0.7-SNAPSHOT"
-    compile "com.github.holgerbrandl:kravis:0.1-SNAPSHOT"
+    compile "de.mpicbg.scicomp:krangl:0.10.3"
+    compile "com.github.holgerbrandl:kravis:0.5"
 
+    compile group: 'edu.ucar', name: 'udunits', version: '4.5.5'
+
+    compile 'com.github.holgerbrandl:kscript-annotations:1.2'
+    compile group: 'edu.mines', name: 'mines-jtk', version: '20151125'
 
     // for jupyter notebook annotations
-    compile 'com.github.holgerbrandl:kscript-annotations:1.1'
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "io.kotlintest:kotlintest:1.1.6"
+    compile "org.jetbrains.kotlin:kotlin-script-runtime:1.2.0"
 }
 
 //Minimal dokka configuration:
