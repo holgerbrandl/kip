@@ -68,4 +68,4 @@ val imageProp = image / other
 
 operator fun RandomAccessibleInterval<*>.plus(rhs: Int) = this
 
-val imageDiff = image + 3
+val imageOffset = image + 3
